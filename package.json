@@ -4,13 +4,13 @@
   "description": "Backend for nutrition app using Prisma and PostgreSQL",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+     "start": "node src/server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
