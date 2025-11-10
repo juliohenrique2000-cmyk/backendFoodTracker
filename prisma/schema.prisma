@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,12 +5,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
 }
 
 model Activity {
@@ -32,30 +23,61 @@ model Activity {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  name        String
-  email       String   @unique
-  password    String
-  photo       String?
-  dateOfBirth DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  pantryItems PantryItem[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String
+  createdAt    DateTime      @default(now())
+  dateOfBirth  DateTime?
+  photo        String?
+  updatedAt    DateTime      @updatedAt
+  pantryItems  PantryItem[]
   waterIntakes WaterIntake[]
-  //contact[]
-  }
-
+}
 
 model Recipes {
-  id        Int  @id @default(autoincrement())
-  name      String
-  calories  Float
-  fatsValue Float
+  id          Int    @id @default(autoincrement())
+  name        String
+  calories    Float
+  fatsValue   Float
   carboValue  Float
   protValue   Float
   prepareTime Int
 
   @@map("recipes")
+}
+
+model PantryItem {
+  id         Int            @id @default(autoincrement())
+  name       String
+  photo      String?
+  categories MealCategory[]
+  type       FoodType
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  userId     Int
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("pantry_items")
+}
+
+model WaterIntake {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  cups      Int      @default(0)
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("water_intakes")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }
 
 enum MealCategory {
@@ -71,33 +93,3 @@ enum FoodType {
   FRUIT
   GRAIN
 }
-
-model PantryItem {
-  id          Int          @id @default(autoincrement())
-  name        String
-  photo       String?      // URL or path to photo
-  categories  MealCategory[]
-  type        FoodType
-  userId      Int
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  @@map("pantry_items")
-}
-
-model WaterIntake {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cups      Int      @default(0)
-  date      DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, date])
-  @@map("water_intakes")
-}
-  
-
-  
